@@ -70,6 +70,9 @@ def get_next_token(start_index, str_input, prev_tokn=''):
         _, next_tok = get_next_token(start_index + 2, str_input)
         if next_tok[0].isdigit():
             return start_index, f"{curr}{nxt}{next_tok}"
+        
+    if curr == "'":
+        return start_index, handle_retarded_single_quote(start_index, str_input, nxt)
 
     if curr == '"':
         return start_index, f"\"{handle_string_literal(start_index+1, str_input)}\"" #because I am retarded
