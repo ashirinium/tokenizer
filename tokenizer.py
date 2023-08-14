@@ -27,7 +27,6 @@ def get_test_tuples():
         file.close()
     return EXPECTED_OUTPUT_STR
 
-
 def is_numeric(str_input: str):
     if str_input.isdigit():
         return True
@@ -52,12 +51,10 @@ def handle_retarded_single_quote(idx, s, nxt):
         return f"{curr}{nxt}{s[idx + 1:idx + 4]}"
     return f"{curr}{s[idx + 1:idx + 3]}"
 
-
 def skip_whitespace(idx, s):
     while idx < len(s) and s[idx] in (' ', '\n', '\t'):
         idx += 1
     return idx
-
 
 def get_next_token(start_index, str_input, prev_tokn=''):
     if start_index >= len(str_input):
@@ -101,8 +98,7 @@ def run_test():
         assert word == expected_output[INDEX], f"Expected {expected_output[INDEX]} but got {word} instead. Index: {INDEX}"
         INDEX += 1
     print("Done")
-        
-   
+
 if __name__ == "__main__":
     expected_output = get_test_tuples()
     expected_output_index = 0
