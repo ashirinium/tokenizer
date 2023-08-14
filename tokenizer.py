@@ -14,7 +14,7 @@ c='a'+'bcd'+'
 
 9.9abc95.68.b8c.d'''
 
-# TEST = f"45454c3.45d"
+# TEST = f"9.9abc95.68.b8c.d"
 
 WORD_STACKS = []
 
@@ -66,8 +66,8 @@ def get_next_token(start_index, str_input, prev_tokn=''):
     nxt = str_input[start_index + 1] if start_index + 1 < len(str_input) else ''
     curr_tokn = curr + nxt if curr + nxt in punctuators else curr
 
-    if (prev_tokn+curr_tokn).isdigit() and nxt == '.':
-        _, next_tok = get_next_token(start_index + 2, str_input)
+    if (prev_tokn+curr_tokn).isdigit() and nxt == '.' or curr == '.' and nxt.isdigit():
+        _, next_tok = get_next_token(start_index + 2, str_input, prev_tokn+curr+nxt)
         if next_tok[0].isdigit():
             return start_index, f"{curr}{nxt}{next_tok}"
         
@@ -95,17 +95,16 @@ def tokenize(str_input):
         i, token = get_next_token(curr_idx, str_input)
         WORD_STACKS.append(token)
         curr_idx = i + len(token)
-        # print(f"Token: {token}, Index: {curr_idx}")
         
    
 if __name__ == "__main__":
-    DEBUG = True
+    RUN_TEST = True
     expected_output = get_test_tuples()
     expected_output_index = 0
     tokenize(TEST)
     for word in WORD_STACKS:
-        print(word)
-        if DEBUG and word != expected_output[expected_output_index]:
+        if RUN_TEST and word != expected_output[expected_output_index]:
             print(f"Expected: \"{expected_output[expected_output_index]}\", Actual: \"{word}\"")
             break
         expected_output_index += 1
+    print("Done")
