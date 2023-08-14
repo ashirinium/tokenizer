@@ -94,11 +94,12 @@ def tokenize(str_input):
         WORD_STACKS.append(token)
         curr_idx = i + len(token)
 
-def run_test()
+def run_test():
     print("Running test...")
+    INDEX = 0
     for word in WORD_STACKS:
-        assert word == expected_output[expected_output_index], f"Expected {expected_output[expected_output_index]} but got {word} instead. Index: {expected_output_index}"
-        expected_output_index += 1
+        assert word == expected_output[INDEX], f"Expected {expected_output[INDEX]} but got {word} instead. Index: {INDEX}"
+        INDEX += 1
     print("Done")
         
    
