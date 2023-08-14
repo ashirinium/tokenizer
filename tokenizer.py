@@ -38,23 +38,24 @@ def is_numeric(str_input: str):
     if str_input[0].isdigit() and str_input[1] == '.' and str_input[2:].isdigit():
         return True
 
-def handle_string_literal(start_index, str_input):
+def handle_string_literal(idx, s):
     #assumes the first " has already been handled"
-    if str_input[start_index] == '"':
+    if s[idx] == '"':
         return ''
-    curr = str_input[start_index]
-    return curr + handle_string_literal(start_index + 1, str_input)
+    curr = s[idx]
+    return curr + handle_string_literal(idx + 1, s)
 
-def handle_retarded_single_quote(start_index, str_input, next_char):
-    curr = str_input[start_index]
-    if next_char == "\\":
-        return f"{curr}{next_char}{str_input[start_index+1]}{str_input[start_index+2]}{str_input[start_index+3]}"
-    return f"{curr}{str_input[start_index+1]}{str_input[start_index+2]}"
+def handle_retarded_single_quote(idx, s, nxt):
+    curr = s[idx]
+    if nxt == "\\":
+        return f"{curr}{nxt}{s[idx + 1:idx + 4]}"
+    return f"{curr}{s[idx + 1:idx + 3]}"
 
-def skip_whitespace(start_index, str_input):
-    while start_index < len(str_input) and str_input[start_index] in (' ', '\n', '\t'):
-        start_index += 1
-    return start_index
+
+def skip_whitespace(idx, s):
+    while idx < len(s) and s[idx] in (' ', '\n', '\t'):
+        idx += 1
+    return idx
 
 
 def get_next_token(start_index, str_input, prev_tokn=''):
