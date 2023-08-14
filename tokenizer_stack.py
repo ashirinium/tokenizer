@@ -89,7 +89,7 @@ def run_test(words):
     for word in words:
         assert word == expected_output[curr_idx], f"Expected {expected_output[curr_idx]} but got {word} instead. Index: {curr_idx}"
         curr_idx += 1
-    print("Done")
+    print("Successfully passed test!")
 
 
 def main():
