@@ -37,6 +37,7 @@ def is_numeric(str_input: str):
         return True
     if str_input[0].isdigit() and str_input[1] == '.' and str_input[2:].isdigit():
         return True
+    return False
 
 def handle_string_literal(idx, s):
     #assumes the first " has already been handled"
@@ -61,7 +62,7 @@ def skip_whitespace(idx, s):
 def get_next_token(start_index, str_input, prev_tokn=''):
     if start_index >= len(str_input):
         return start_index, ''
-    
+
     start_index = skip_whitespace(start_index, str_input)
     curr = str_input[start_index]
     nxt = str_input[start_index + 1] if start_index + 1 < len(str_input) else ''
@@ -71,23 +72,19 @@ def get_next_token(start_index, str_input, prev_tokn=''):
         _, next_tok = get_next_token(start_index + 2, str_input, prev_tokn+curr+nxt)
         if next_tok[0].isdigit():
             return start_index, f"{curr}{nxt}{next_tok}"
-        
     if curr == "'":
         return start_index, handle_retarded_single_quote(start_index, str_input, nxt)
 
     if curr == '"':
         return start_index, f"\"{handle_string_literal(start_index+1, str_input)}\"" #because I am retarded
-    
+
     if curr_tokn in punctuators:
         return start_index, curr_tokn
-    
+
     if nxt in punctuators or nxt in (' ', '\n', '\t', "'"):
         return start_index, curr
-    
     _, next_word = get_next_token(start_index + len(curr_tokn), str_input, prev_tokn+curr_tokn)
     return start_index, curr + next_word
-
-
 
 
 def tokenize(str_input):
@@ -96,16 +93,18 @@ def tokenize(str_input):
         i, token = get_next_token(curr_idx, str_input)
         WORD_STACKS.append(token)
         curr_idx = i + len(token)
+
+def run_test()
+    print("Running test...")
+    for word in WORD_STACKS:
+        assert word == expected_output[expected_output_index], f"Expected {expected_output[expected_output_index]} but got {word} instead. Index: {expected_output_index}"
+        expected_output_index += 1
+    print("Done")
         
    
 if __name__ == "__main__":
-    RUN_TEST = True
     expected_output = get_test_tuples()
     expected_output_index = 0
     tokenize(TEST)
-    for word in WORD_STACKS:
-        if RUN_TEST and word != expected_output[expected_output_index]:
-            print(f"Expected: \"{expected_output[expected_output_index]}\", Actual: \"{word}\"")
-            break
-        expected_output_index += 1
-    print("Done")
+    run_test()
+    
