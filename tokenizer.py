@@ -4,28 +4,7 @@
 # pylint: disable=too-many-return-statements, too-many-branches, too-many-statements, too-many-locals
 # pylint: disable=invalid-name
 
-
-TEST = '''== void class A_B_C: 35
-int a=b==++==6
-while(a<===b!!!=+-**55)
-{{
-    c="abc+=56"abc_d
-c='a'+'bcd'+'
-
-9.9abc95.68.b8c.d'''
-
-# TEST = f"9.9abc95.68.b8c.d"
-
-WORD_STACKS = []
-
 punctuators = [',', ';', ':', '(', ')', '{', '}', '[', ']', "==", "!=", "<=", ">=", "+=", "-=", "*=", "/=", "++", "--", "+", "-", "*", "/", "%", "<", ">", "=", "!", "&", "|", "^", "~", "<<", ">>", "&&", "||", "?", ":", "."]
-
-def get_test_tuples():
-    EXPECTED_OUTPUT_STR = []
-    with open("out.txt", "r", encoding="utf-8") as file:
-        EXPECTED_OUTPUT_STR = [x.rstrip() for x in file.readlines()]
-        file.close()
-    return EXPECTED_OUTPUT_STR
 
 def is_numeric(str_input: str):
     if str_input.isdigit():
@@ -84,24 +63,11 @@ def get_next_token(start_index, str_input, prev_tokn=''):
     return start_index, curr + next_word
 
 
-def tokenize(str_input):
+def tokenize(str_input) -> [str]:
+    tokens = []
     curr_idx = 0
     while curr_idx < len(str_input):
         i, token = get_next_token(curr_idx, str_input)
-        WORD_STACKS.append(token)
+        tokens.append(token)
         curr_idx = i + len(token)
-
-def run_test():
-    print("Running test...")
-    INDEX = 0
-    for word in WORD_STACKS:
-        assert word == expected_output[INDEX], f"Expected {expected_output[INDEX]} but got {word} instead. Index: {INDEX}"
-        INDEX += 1
-    print("Done")
-
-if __name__ == "__main__":
-    expected_output = get_test_tuples()
-    expected_output_index = 0
-    tokenize(TEST)
-    run_test()
-    
+    return tokens

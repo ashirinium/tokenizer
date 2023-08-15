@@ -16,49 +16,12 @@ c='a'+'bcd'+'
 word_breakers = ['\n', " ", ":", "=", "+", "-", "*", "/", "%", "<", ">", "!", "&", "|", "^", "~", "?", ".", ",", ";", "(", ")", "{", "}", "[", "]", "'", "\""]
 double_breakers = ["==", "!=", "<=", ">=", "+=", "-=", "*=", "/=", "++", "--", "<<", ">>", "&&", "||", "!"]
 
-def get_tokens(str_input: str):
+def tokenize(str_input: str) -> [str]:
     delimiters_pattern = f'({"|".join(map(re.escape, word_breakers))})'
     result = re.split(delimiters_pattern, str_input)
     cleaned = [r for r in result if r.strip()]
     cleaned.reverse()
-    return cleaned
-
-def tokenize(word_list: [str]):
-    if len(word_list) <= 1:
-        return word_list
-    top = word_list.pop()
-    peek = word_list[-1]
-
-    if top+peek in double_breakers:
-        return [top+word_list.pop()] + tokenize(word_list)
-
-    if top.isdigit() and peek == ".":
-        next_token = word_list[-2]
-        if next_token[0].isdigit():
-            word_list.pop()
-            word_list.pop()
-            return [top + peek + next_token] + tokenize(word_list)
-
-    if top == "." and peek[0].isdigit():
-        return [top + word_list.pop()] + tokenize(word_list)
-
-    if top == "'":
-        if peek == "\\":
-            peek = word_list.pop()
-            first, second = extract_next_two_chars(word_list)
-            return [top + peek + first + second] + tokenize(word_list)
-        first, second = extract_next_two_chars(word_list)
-        return [top + first + second] + tokenize(word_list)
-
-    if top == '"':
-        word = word_list.pop()
-        while word != '"':
-            top += word
-            word = word_list.pop()
-        return [top+word] + tokenize(word_list)
-
-    return [top] + tokenize(word_list)
-
+    return get_tokens(cleaned)
 
 def extract_next_two_chars(stack: [str]):
     word   = stack.pop()
@@ -74,29 +37,38 @@ def extract_next_two_chars(stack: [str]):
         second = stack.pop()
     return first, second
 
+def get_tokens(word_list: [str]) -> [str]:
+    if len(word_list) <= 1:
+        return word_list
+    top = word_list.pop()
+    peek = word_list[-1]
 
-def get_test_tuples():
-    expected_output_str = []
-    with open("out.txt", "r", encoding="utf-8") as file:
-        expected_output_str = [x.rstrip() for x in file.readlines()]
-        file.close()
-    return expected_output_str
+    if top+peek in double_breakers:
+        return [top+word_list.pop()] + get_tokens(word_list)
 
-def run_test(words):
-    print("Running test...")
-    expected_output = get_test_tuples()
-    curr_idx = 0
-    for word in words:
-        assert word == expected_output[curr_idx], f"Expected {expected_output[curr_idx]} but got {word} instead. Index: {curr_idx}"
-        curr_idx += 1
-    print("Successfully passed test!")
+    if top.isdigit() and peek == ".":
+        next_token = word_list[-2]
+        if next_token[0].isdigit():
+            word_list.pop()
+            word_list.pop()
+            return [top + peek + next_token] + get_tokens(word_list)
 
+    if top == "." and peek[0].isdigit():
+        return [top + word_list.pop()] + get_tokens(word_list)
 
-def main():
-    tokens = get_tokens(TEST)
-    words = tokenize(tokens)
-    run_test(words)
-    
-    
+    if top == "'":
+        if peek == "\\":
+            peek = word_list.pop()
+            first, second = extract_next_two_chars(word_list)
+            return [top + peek + first + second] + get_tokens(word_list)
+        first, second = extract_next_two_chars(word_list)
+        return [top + first + second] + get_tokens(word_list)
 
-main()
+    if top == '"':
+        word = word_list.pop()
+        while word != '"':
+            top += word
+            word = word_list.pop()
+        return [top+word] + get_tokens(word_list)
+
+    return [top] + get_tokens(word_list)
